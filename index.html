@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Scraper | Premium Lead Sourcing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="error-banner">
+        <span id="error-message"></span>
+        <button onclick="hideError()">✕</button>
+    </div>
+
+    <nav class="navbar">
+        <a href="#" class="logo">Lead Scraper</a>
+        <div class="nav-links">
+            <button class="nav-btn active" id="nav-new-search">New Search</button>
+            <button class="nav-btn" id="nav-old-leads">Old Leads</button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- View 1: New Search -->
+        <section id="view-new-search" class="view-container active">
+            <div class="card" id="form-card">
+                <h1 class="card-title">Source New Leads</h1>
+                <p class="card-subtitle">Fill your ICP filters to pull targeted leads from Apollo</p>
+
+                <form id="lead-form">
+                    <div class="form-group">
+                        <label class="form-label">Target Geographies</label>
+                        <select class="form-select" name="Target Geographies" required>
+                            <option value="" disabled selected>Select Geography</option>
+                            <option value="EU">EU</option>
+                            <option value="US">US</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Target Industries</label>
+                        <select class="form-select" name="Target Industries" required>
+                            <option value="" disabled selected>Select Industry</option>
+                            <option value="SaaS">SaaS</option>
+                            <option value="Marketing Agency">Marketing Agency</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Fintech">Fintech</option>
+                            <option value="E-commerce">E-commerce</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Legal">Legal</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="Consulting">Consulting</option>
+                            <option value="EdTech">EdTech</option>
+                            <option value="Logistics">Logistics</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Company Size (Employees)</label>
+                        <select class="form-select" name="Company Size (Employees)" required>
+                            <option value="" disabled selected>Select Company Size</option>
+                            <option value="1,10">1,10</option>
+                            <option value="11,50">11,50</option>
+                            <option value="51,200">51,200</option>
+                            <option value="201,500">201,500</option>
+                            <option value="501,1000">501,1000</option>
+                            <option value="1001,5000">1001,5000</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Job Role / Designation</label>
+                        <select class="form-select" name="Job Role / Designation" required>
+                            <option value="" disabled selected>Select Job Role</option>
+                            <option value="Directors">Directors</option>
+                            <option value="Presidents">Presidents</option>
+                            <option value="Vice President">Vice President</option>
+                            <option value="CXO">CXO</option>
+                            <option value="CFO">CFO</option>
+                            <option value="CEO">CEO</option>
+                            <option value="Plant Head">Plant Head</option>
+                            <option value="Strategy Head">Strategy Head</option>
+                            <option value="Business Development Head">Business Development Head</option>
+                            <option value="General Manager">General Manager</option>
+                            <option value="Managing Partner">Managing Partner</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Contact Email Availability</label>
+                        <select class="form-select" name="Contact Email Availability" required>
+                            <option value="" disabled selected>Select Email Availability</option>
+                            <option value="Has Email Only">Has Email Only</option>
+                            <option value="All Contacts">All Contacts</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="btn-submit">Source Leads</button>
+                </form>
+
+                <div id="loading-state" class="loading-overlay">
+                    <div class="spinner"></div>
+                    <h2 class="card-title">Sourcing leads from Apollo...</h2>
+                    <div class="progress-container">
+                        <div id="loading-progress-bar" class="progress-bar"></div>
+                    </div>
+                    <p class="card-subtitle">This usually takes 20-30 seconds</p>
+                </div>
+            </div>
+
+            <!-- Results Section (Initially Hidden) -->
+            <div id="results-section" style="display: none; margin-top: 3rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 id="results-count" class="lead-count">0 leads sourced</h2>
+                    <button class="btn-sm btn-view" id="btn-new-search-reset">Start New Search</button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Title</th>
+                                <th>Company</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Seniority</th>
+                                <th>Country</th>
+                                <th>LinkedIn</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-tbody">
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- View 2: Old Leads -->
+        <section id="view-old-leads" class="view-container">
+            <h1 class="card-title">Lead History</h1>
+            <p class="card-subtitle">All previously sourced leads grouped by date</p>
+
+            <input type="text" id="history-search" class="search-bar" placeholder="Filter leads by name or email...">
+
+            <div id="history-content">
+                <!-- Collapsible sections injected by JS -->
+            </div>
+
+            <div id="history-empty" style="display: none; text-align: center; padding: 3rem;">
+                <p class="card-subtitle">No leads sourced yet. Run your first search.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for View Details -->
+    <div id="details-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modal-title">Lead Details</h2>
+                <button class="modal-close" id="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Details grid injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
