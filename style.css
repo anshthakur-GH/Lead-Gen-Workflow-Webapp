@@ -155,8 +155,101 @@ body {
     border-color: var(--accent-color);
 }
 
-.form-select.error {
+.form-select.error, .tag-input-container.error {
     border-color: var(--error-color);
+}
+
+/* Tag Input Styles */
+.tag-input-container {
+    width: 100%;
+    min-height: 45px;
+    padding: 0.5rem;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    position: relative;
+    cursor: text;
+    transition: border-color var(--transition-speed);
+    margin-top: 5px;
+}
+
+.tag-input-container:focus-within {
+    border-color: var(--accent-color);
+}
+
+.tag {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.tag-remove {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 1;
+    transition: opacity 0.2s;
+}
+
+.tag-remove:hover {
+    opacity: 0.7;
+}
+
+.tag-input {
+    flex: 1;
+    min-width: 120px;
+    background: transparent;
+    border: none;
+    color: var(--primary-text);
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    padding: 2px 0;
+}
+
+.suggestions-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.suggestions-list.active {
+    display: block;
+}
+
+.suggestion-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: var(--primary-text);
+}
+
+.suggestion-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.suggestion-item.selected {
+    color: var(--accent-color);
+    background-color: rgba(108, 99, 255, 0.1);
 }
 
 .submit-btn {

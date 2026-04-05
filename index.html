@@ -30,31 +30,22 @@
                 <p class="card-subtitle">Fill your ICP filters to pull targeted leads from Apollo</p>
 
                 <form id="lead-form">
-                    <div class="form-group">
+                    <div class="form-group" id="group-geographies">
                         <label class="form-label">Target Geographies</label>
-                        <select class="form-select" name="Target Geographies" required>
-                            <option value="" disabled selected>Select Geography</option>
-                            <option value="EU">EU</option>
-                            <option value="US">US</option>
-                        </select>
+                        <div class="tag-input-container" id="container-geographies">
+                            <input type="text" class="tag-input" placeholder="Type or select geographies...">
+                            <div class="suggestions-list"></div>
+                        </div>
+                        <input type="hidden" name="Target Geographies" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="group-industries">
                         <label class="form-label">Target Industries</label>
-                        <select class="form-select" name="Target Industries" required>
-                            <option value="" disabled selected>Select Industry</option>
-                            <option value="SaaS">SaaS</option>
-                            <option value="Marketing Agency">Marketing Agency</option>
-                            <option value="Finance">Finance</option>
-                            <option value="Fintech">Fintech</option>
-                            <option value="E-commerce">E-commerce</option>
-                            <option value="Healthcare">Healthcare</option>
-                            <option value="Legal">Legal</option>
-                            <option value="Real Estate">Real Estate</option>
-                            <option value="Consulting">Consulting</option>
-                            <option value="EdTech">EdTech</option>
-                            <option value="Logistics">Logistics</option>
-                        </select>
+                        <div class="tag-input-container" id="container-industries">
+                            <input type="text" class="tag-input" placeholder="Type or select industries...">
+                            <div class="suggestions-list"></div>
+                        </div>
+                        <input type="hidden" name="Target Industries" required>
                     </div>
 
                     <div class="form-group">
@@ -70,22 +61,13 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="group-job-roles">
                         <label class="form-label">Job Role / Designation</label>
-                        <select class="form-select" name="Job Role / Designation" required>
-                            <option value="" disabled selected>Select Job Role</option>
-                            <option value="Directors">Directors</option>
-                            <option value="Presidents">Presidents</option>
-                            <option value="Vice President">Vice President</option>
-                            <option value="CXO">CXO</option>
-                            <option value="CFO">CFO</option>
-                            <option value="CEO">CEO</option>
-                            <option value="Plant Head">Plant Head</option>
-                            <option value="Strategy Head">Strategy Head</option>
-                            <option value="Business Development Head">Business Development Head</option>
-                            <option value="General Manager">General Manager</option>
-                            <option value="Managing Partner">Managing Partner</option>
-                        </select>
+                        <div class="tag-input-container" id="container-job-roles">
+                            <input type="text" class="tag-input" placeholder="Type or select roles...">
+                            <div class="suggestions-list"></div>
+                        </div>
+                        <input type="hidden" name="Job Role / Designation" required>
                     </div>
 
                     <div class="form-group">

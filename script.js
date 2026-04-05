@@ -57,6 +57,128 @@ function switchView(view) {
     }
 }
 
+// Tag Input Component
+class TagInput {
+    constructor(containerId, hiddenInputName, options = []) {
+        this.container = document.getElementById(containerId);
+        this.input = this.container.querySelector('.tag-input');
+        this.suggestionsList = this.container.querySelector('.suggestions-list');
+        this.hiddenInput = document.querySelector(`input[name="${hiddenInputName}"]`);
+        this.options = options;
+        this.tags = [];
+
+        this.init();
+    }
+
+    init() {
+        this.input.addEventListener('focus', () => this.showSuggestions());
+        this.input.addEventListener('input', () => this.filterSuggestions());
+        
+        // Handle custom input
+        this.input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const value = this.input.value.trim().replace(/,$/, '');
+                if (value) this.addTag(value);
+            }
+        });
+
+        // Close suggestions on click outside
+        document.addEventListener('click', (e) => {
+            if (!this.container.contains(e.target)) {
+                this.hideSuggestions();
+            }
+        });
+
+        this.renderSuggestions();
+    }
+
+    showSuggestions() {
+        this.suggestionsList.classList.add('active');
+        this.renderSuggestions();
+    }
+
+    hideSuggestions() {
+        this.suggestionsList.classList.remove('active');
+    }
+
+    filterSuggestions() {
+        const query = this.input.value.toLowerCase();
+        const filtered = this.options.filter(opt => opt.toLowerCase().includes(query));
+        this.renderSuggestions(filtered);
+    }
+
+    renderSuggestions(filteredOptions = this.options) {
+        this.suggestionsList.innerHTML = '';
+        filteredOptions.forEach(opt => {
+            const item = document.createElement('div');
+            item.className = 'suggestion-item';
+            if (this.tags.includes(opt)) item.classList.add('selected');
+            item.textContent = opt;
+            item.onclick = () => this.addTag(opt);
+            this.suggestionsList.appendChild(item);
+        });
+    }
+
+    addTag(value) {
+        if (this.tags.includes(value)) {
+            this.input.value = '';
+            this.hideSuggestions();
+            return;
+        }
+        
+        this.tags.push(value);
+        this.renderTags();
+        this.updateHiddenInput();
+        this.input.value = '';
+        this.hideSuggestions();
+    }
+
+    removeTag(value) {
+        this.tags = this.tags.filter(t => t !== value);
+        this.renderTags();
+        this.updateHiddenInput();
+    }
+
+    renderTags() {
+        // Remove existing tags from UI
+        this.container.querySelectorAll('.tag').forEach(t => t.remove());
+        
+        // Add current tags before the input
+        this.tags.forEach(tag => {
+            const tagEl = document.createElement('div');
+            tagEl.className = 'tag';
+            tagEl.innerHTML = `
+                ${tag}
+                <span class="tag-remove">&times;</span>
+            `;
+            tagEl.querySelector('.tag-remove').onclick = (e) => {
+                e.stopPropagation();
+                this.removeTag(tag);
+            };
+            this.container.insertBefore(tagEl, this.input);
+        });
+    }
+
+    updateHiddenInput() {
+        this.hiddenInput.value = this.tags.join(', ');
+        // Trigger validation check
+        const group = this.container.closest('.form-group');
+        if (this.tags.length > 0) {
+            this.container.classList.remove('error');
+        }
+    }
+}
+
+// Initialize Tag Inputs
+const tagInputs = {
+    geographies: new TagInput('container-geographies', 'Target Geographies', ['EU', 'US']),
+    industries: new TagInput('container-industries', 'Target Industries', 
+        ['SaaS', 'Marketing Agency', 'Finance', 'Fintech', 'E-commerce', 'Healthcare', 'Legal', 'Real Estate', 'Consulting', 'EdTech', 'Logistics']),
+    jobRoles: new TagInput('container-job-roles', 'Job Role / Designation', 
+        ['Directors', 'Presidents', 'Vice President', 'CXO', 'CFO', 'CEO', 'Plant Head', 'Strategy Head', 'Business Development Head', 'General Manager', 'Managing Partner'])
+};
+
 // Form Submission
 leadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -65,15 +187,26 @@ leadForm.addEventListener('submit', async (e) => {
     const formData = new FormData(leadForm);
     let isValid = true;
     
-    for (let [key, value] of formData.entries()) {
-        const select = leadForm.querySelector(`[name="${key}"]`);
+    // Validate standard selects and TagInputs
+    ['Target Geographies', 'Target Industries', 'Company Size (Employees)', 'Job Role / Designation', 'Contact Email Availability'].forEach(name => {
+        const value = formData.get(name);
+        const field = leadForm.querySelector(`[name="${name}"]`);
+        
         if (!value) {
-            select.classList.add('error');
             isValid = false;
+            if (field.type === 'hidden') {
+                field.previousElementSibling.classList.add('error');
+            } else {
+                field.classList.add('error');
+            }
         } else {
-            select.classList.remove('error');
+            if (field.type === 'hidden') {
+                field.previousElementSibling.classList.remove('error');
+            } else {
+                field.classList.remove('error');
+            }
         }
-    }
+    });
     
     if (!isValid) return;
     
@@ -143,6 +276,13 @@ document.getElementById('btn-new-search-reset').addEventListener('click', () => 
     leadForm.style.display = 'block';
     document.querySelector('.card-subtitle').style.display = 'block';
     leadForm.reset();
+    
+    // Clear TagInputs
+    Object.values(tagInputs).forEach(ti => {
+        ti.tags = [];
+        ti.renderTags();
+        ti.updateHiddenInput();
+    });
 });
 
 // History Logic
